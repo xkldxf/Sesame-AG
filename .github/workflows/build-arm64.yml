@@ -1,0 +1,32 @@
+name: Build arm64 Release APK
+# 允许页面手动触发 + push自动触发
+on:
+  workflow_dispatch: # 关键：页面出现Run workflow按钮
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取源码
+        uses: actions/checkout@v4
+
+      - name: 配置JDK17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: "temurin"
+          cache: gradle
+
+      - name: 授予Gradle执行权限
+        run: chmod +x gradlew
+
+      - name: 清理并编译仅arm64 Release包
+        run: ./gradlew clean assembleRelease
+
+      - name: 上传APK成品
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sesame-AG-arm64-Release
+          path: app/build/outputs/apk/release/*.apk
