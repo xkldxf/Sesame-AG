@@ -3,8 +3,8 @@ name: Build arm64 Release APK
 on:
   workflow_dispatch: # 关键：页面出现Run workflow按钮
   push:
-    branches: [ main ]
-
+    branches:
+    - xkldxf-patch-1 # 新增你的patch分支
 jobs:
   build:
     runs-on: ubuntu-latest
