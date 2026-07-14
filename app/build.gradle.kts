@@ -15,7 +15,7 @@ var isCIBuild: Boolean = System.getenv("CI").toBoolean()
 
 android {
     namespace = "fansirsqi.xposed.sesame"
-    compileSdk = 36
+    compileSdk = 100
     packaging {
         jniLibs {
             useLegacyPackaging = true
@@ -24,8 +24,8 @@ android {
             abi {
                 isEnable = true
                 reset()
-                include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-                isUniversalApk = true
+                include("arm64-v8a")
+                isUniversalApk = false
             }
         }
 
@@ -38,7 +38,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         applicationId = "fansirsqi.xposed.sesame"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 100
 
         val buildDate = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).apply {
             timeZone = TimeZone.getTimeZone("GMT+8")
@@ -55,7 +55,13 @@ android {
         buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
         if (isCIBuild) {
             ndk {
-                abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+                abiFilters.addAll(listOf("arm64-v8a"))
+            }
+        } else {
+            // Ensure local builds also only build arm64 native libs when CMake/NDK is used
+            ndk {
+                abiFilters.clear()
+                abiFilters.add("arm64-v8a")
             }
         }
 
