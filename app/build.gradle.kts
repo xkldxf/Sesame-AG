@@ -24,8 +24,8 @@ android {
             abi {
                 isEnable = true
                 reset()
-                include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-                isUniversalApk = true
+                include("arm64-v8a")
+                isUniversalApk = false
             }
         }
 
@@ -53,11 +53,6 @@ android {
 
         buildConfigField("String", "BUILD_DATE", "\"$buildDate\"")
         buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
-        if (isCIBuild) {
-            ndk {
-                abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
-            }
-        }
 
         testOptions {
             unitTests.all {
@@ -190,7 +185,7 @@ dependencies {
     implementation(libs.webkit)                     // WebView 组件
 
     // 仅编译时依赖 - Xposed 相关
-    compileOnly(files("libs/api-82.jar"))          // Xposed API 82
+    //compileOnly(files("libs/api-82.jar"))          // Xposed API 82
     compileOnly(files("libs/api-100.aar"))         // Xposed API 100 https://github.com/libxposed/api
     implementation(files("libs/interface-100.aar")) // Xposed 模块接口 https://github.com/libxposed/api
     implementation(files("libs/service-100-1.0.0.aar"))  // https://github.com/libxposed/service
